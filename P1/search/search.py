@@ -123,7 +123,21 @@ def breadthFirstSearch(problem):
 def uniformCostSearch(problem):
     """Search the node of least total cost first."""
     "*** YOUR CODE HERE ***"
-    util.raiseNotDefined()
+    s = util.PriorityQueue()
+    for i in problem.getSuccessors(problem.getStartState()):
+        s.push([i, [], [], 0], 0) # [successor, actions list, closed list, cost so far], priority = cost
+    while not s.isEmpty():
+        leaf = s.pop()
+        leaf[1] = leaf[1] + [leaf[0][1]] # edit actions list
+        leaf[2] = leaf[2] + [leaf[0][0]] # edit closed list
+        if problem.isGoalState(leaf[0][0]):
+            return leaf[1]
+        else:
+            for j in problem.getSuccessors(leaf[0][0]):
+                if j[0] not in leaf[2]: # haven't been there yet
+                    cost = leaf[3] + j[2]
+                    s.push([j, leaf[1], leaf[2], cost], cost)
+    return []
 
 def nullHeuristic(state, problem=None):
     """
@@ -135,7 +149,21 @@ def nullHeuristic(state, problem=None):
 def aStarSearch(problem, heuristic=nullHeuristic):
     """Search the node that has the lowest combined cost and heuristic first."""
     "*** YOUR CODE HERE ***"
-    util.raiseNotDefined()
+    s = util.PriorityQueue()
+    for i in problem.getSuccessors(problem.getStartState()):
+        s.push([i, [], [], 0], heuristic(i[0], problem)) # [successor, actions list, closed list, cost so far], priority = cost + heuristic
+    while not s.isEmpty():
+        leaf = s.pop()
+        leaf[1] = leaf[1] + [leaf[0][1]] # edit actions list
+        leaf[2] = leaf[2] + [leaf[0][0]] # edit closed list
+        if problem.isGoalState(leaf[0][0]):
+            return leaf[1]
+        else:
+            for j in problem.getSuccessors(leaf[0][0]):
+                if j[0] not in leaf[2]: # haven't been there yet
+                    cost = leaf[3] + j[2]
+                    s.push([j, leaf[1], leaf[2], cost], cost + heuristic(i[0], problem))
+    return []
 
 
 # Abbreviations
