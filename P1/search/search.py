@@ -107,16 +107,18 @@ def breadthFirstSearch(problem):
     "*** YOUR CODE HERE ***"
     s = util.Queue()
     for i in problem.getSuccessors(problem.getStartState()):
-        s.push([i, [], []])
+        s.push([i, [], []]) # [successor, actions list, closed list, cost so far]
+    k = 0
     while not s.isEmpty():
+    	k = k + 1
         leaf = s.pop()
-        leaf[1] = leaf[1] + [leaf[0][1]]
-        leaf[2] = leaf[2] + [leaf[0][0]]
+        leaf[1] = leaf[1] + [leaf[0][1]] # edit actions list
+        leaf[2] = leaf[2] + [leaf[0][0]] # edit closed list
         if problem.isGoalState(leaf[0][0]):
             return leaf[1]
         else:
             for j in problem.getSuccessors(leaf[0][0]):
-                if j[0] not in leaf[2]:
+                if j[0] not in leaf[2]: # haven't been there yet
                     s.push([j, leaf[1], leaf[2]])
     return []
 
